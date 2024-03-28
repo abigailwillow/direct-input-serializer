@@ -1,18 +1,28 @@
 import pygame
+from datetime import datetime
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
 from input import Input
 
+start_time = datetime.now()
 inputs = []
 
 def handle_input(button, state):
     print(f'{button.name} {state.name}')
+    inputs.append(Input(button, datetime.now() - start_time, state))
+    print(inputs[-1].__dict__)
 
 running = True
 
 pygame.init()
+
 pygame.display.set_mode((1280, 720))
 pygame.display.set_caption('DirectInput Serializer')
+
+pygame.mixer.init()
+pygame.mixer.music.load('karaoke.mp3')
+pygame.mixer.music.play()
+
 pygame.joystick.init()
 
 joystick = pygame.joystick.Joystick(0)
