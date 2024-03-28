@@ -14,7 +14,7 @@ def handle_input(button, state):
     current_time = (time.time_ns() - start_time) // 1_000_000
     input = Input(button, current_time, state)
     inputs.append(input)
-    print(json.dumps(input.__dict__))
+    print(f'({input.time} ms) {input.button} {input.state}')
 
 def save_inputs():
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
