@@ -1,5 +1,13 @@
 import pygame
-from dualshock4_buttons import DualShock4Buttons
+from dualshock4_button import DualShock4Button
+
+inputs = []
+
+def button_pressed(button):
+    print(f'{button} PRESSED')
+
+def button_released(button):
+    print(f'{button} RELEASED')
 
 running = True
 
@@ -22,10 +30,10 @@ while running:
         value = joystick.get_button(i)
         if value != previous_values[i]:
             if value == 0:
-                print(f'{DualShock4Buttons(i).name} RELEASED')
+                button_released(DualShock4Button(i))
                 
             if value == 1:
-                print(f'{DualShock4Buttons(i).name} PRESSED')      
+                button_pressed(DualShock4Button(i))   
             previous_values[i] = value
 
 pygame.quit()
