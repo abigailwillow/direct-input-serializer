@@ -1,16 +1,27 @@
 import json
+import atexit
 import pygame
+import time
 from datetime import datetime
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
 from input import Input
 
-start_time = datetime.now()
+start_time = time.time_ns()
 inputs = []
 
 def handle_input(button, state):
-    print(f'{button.name} {state.name}')
-    inputs.append(Input(button, datetime.now() - start_time, state))
+    current_time = (time.time_ns() - start_time) // 1_000_000
+    input = Input(button, current_time, state)
+    inputs.append(input)
+    print(json.dumps(input.__dict__))
+
+def save_inputs():
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    with open(f'inputs-{timestamp}.json', 'w') as file:
+        file.write(json.dumps([input.__dict__ for input in inputs]))
+
+atexit.register(save_inputs)
 
 running = True
 
@@ -30,10 +41,7 @@ previous_values = {i: 0 for i in range(joystick.get_numbuttons())}
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            with open(f'inputs-{datetime.now()}.json', 'w') as file:
-                file.write(json.dumps([input.__dict__ for input in inputs]))
             running = False
-
 
     for i in range(joystick.get_numbuttons()):
         value = joystick.get_button(i)
