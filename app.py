@@ -4,25 +4,36 @@ import atexit
 import pygame
 import time
 import tkinter as tk
+from typing import List, Dict
 from tkinter import filedialog
 from datetime import datetime
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
-from input import Input
+from note import Note
+from note_type import NoteType
 
 COLOR_WHITE = (255, 255, 255)
 START_TIME = time.time_ns()
+HOLD_TRESHOLD = 500
 
-inputs = []
-ms_elapsed = 0
+lines = []
+notes: List[Note] = []
+ms_elapsed: int = 0
+last_pressed: Dict[DualShock4Button, int] = {button: 0 for button in DualShock4Button}
 
-def handle_input(button, state):
-    input = Input(button, ms_elapsed, state)
-    inputs.append(input)
-    print(f'({input.time} ms) {input.button} {input.state}')
+def handle_input(button: DualShock4Button, state: ButtonState):
+    if state == ButtonState.PRESSED:
+        last_pressed[button] = ms_elapsed
+        print(f'({ms_elapsed} ms) {button.name.upper()} PRESSED')
+
+    if state == ButtonState.RELEASED:
+        hold_time = ms_elapsed - last_pressed[button]
+        note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, last_pressed[button], hold_time)
+        notes.append(note)
+        print(f'({ms_elapsed} ms) {note.button.upper()} RELEASED AFTER {int(note.length * 1000)} ms ({note.type.upper()})')
 
 def serialize_inputs():
-    if not inputs:
+    if not notes:
         return
     
     if not os.path.exists('output'):
@@ -30,7 +41,7 @@ def serialize_inputs():
 
     file_name = f'output/{os.path.splitext(os.path.basename(audio_file))[0]}-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.json'
     with open(file_name, 'w') as file:
-        file.write(json.dumps([input.__dict__ for input in inputs]))
+        file.write(json.dumps([input.__dict__ for input in notes]))
 
 atexit.register(serialize_inputs)
 
@@ -47,6 +58,7 @@ pygame.joystick.init()
 pygame.mixer.init()
 pygame.mixer.music.load(audio_file)
 pygame.mixer.music.play()
+print(f'Playing {os.path.basename(audio_file)}')
 
 window = pygame.display.set_mode((256, 256))
 pygame.display.set_caption("DirectInput Serializer")
