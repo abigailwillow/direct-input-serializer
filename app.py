@@ -23,16 +23,15 @@ HOLD_TRESHOLD = 500
 
 lines = []
 notes: List[Note] = []
-ms_elapsed: int = 0
 last_pressed: Dict[DualShock4Button, int] = {button: 0 for button in DualShock4Button}
 
 def handle_input(button: DualShock4Button, state: ButtonState):
     if state == ButtonState.PRESSED:
-        last_pressed[button] = ms_elapsed
-        print(f'({ms_elapsed} ms) {button.name.upper()} PRESSED')
+        last_pressed[button] = pygame.time.get_ticks()
+        print(f'({pygame.time.get_ticks()} ms) {button.name.upper()} PRESSED')
 
     if state == ButtonState.RELEASED:
-        hold_time = ms_elapsed - last_pressed[button]
+        hold_time = pygame.time.get_ticks() - last_pressed[button]
 
         start_time = last_pressed[button]
         if os.getenv('SNAPPING') == 'true':
@@ -41,7 +40,7 @@ def handle_input(button: DualShock4Button, state: ButtonState):
 
         note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, start_time, hold_time)
         notes.append(note)
-        print(f'({ms_elapsed} ms) {note.button.upper()} RELEASED (TYPE: {note.type.upper()}, START: {start_time} MS, LENGTH: {hold_time} MS)')
+        print(f'({pygame.time.get_ticks()} ms) {note.button.upper()} RELEASED (TYPE: {note.type.upper()}, START: {start_time} MS, LENGTH: {hold_time} MS)')
 
 def serialize_inputs():
     if not notes:
@@ -89,8 +88,6 @@ while running:
     music_s = music_ms // 1000
     music_min, music_sec = divmod(music_s, 60)
     
-    ms_elapsed = (time.time_ns() - START_TIME) // 1_000_000
-
     pressed_buttons = []
     for i in range(joystick.get_numbuttons()):
         if joystick.get_button(i):
@@ -100,7 +97,7 @@ while running:
                 continue
 
     music_text = font.render(f'{music_min:02}:{music_sec:02}', True, COLOR_WHITE)
-    ms_text = font.render(f'{ms_elapsed} ms', True, COLOR_WHITE)
+    ms_text = font.render(f'{pygame.time.get_ticks()} ms', True, COLOR_WHITE)
 
     window.blit(music_text, (16, 16))
     window.blit(ms_text, (16, 48))
