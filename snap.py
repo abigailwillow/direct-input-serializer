@@ -15,8 +15,8 @@ with open(args.file, 'r') as file:
 divisions = (60 / BPM) / DIVISION
 
 for note in notes:
-    note['start_time'] = note['start_time'] / divisions * divisions
-    note['length'] = note['length'] / divisions * divisions
+    note['start_time'] = round(note['start_time'] / divisions) * divisions
+    note['length'] = round(note['length'] / divisions) * divisions if note['type'] == 'hold' else 0
 
 file, extension = os.path.splitext(args.file)
 args.file = f'{file}-snapped{extension}'
