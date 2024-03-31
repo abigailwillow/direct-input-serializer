@@ -16,6 +16,7 @@ from note_type import NoteType
 
 load_dotenv()
 
+VOLUME = 0.5
 COLOR_WHITE = (255, 255, 255)
 START_TIME = time.time_ns()
 HOLD_TRESHOLD = 500
@@ -67,6 +68,7 @@ pygame.joystick.init()
 
 pygame.mixer.init()
 pygame.mixer.music.load(audio_file)
+pygame.mixer.music.set_volume(VOLUME)
 pygame.mixer.music.play()
 print(f'Playing {os.path.basename(audio_file)}')
 
