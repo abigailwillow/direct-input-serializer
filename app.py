@@ -51,7 +51,7 @@ def serialize_inputs():
 
     file_name = f'output/{os.path.splitext(os.path.basename(audio_file))[0]}-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.json'
     with open(file_name, 'w') as file:
-        file.write(json.dumps([input.__dict__ for input in notes]))
+        file.write(json.dumps([input.__dict__ for input in notes], indent=4))
 
 atexit.register(serialize_inputs)
 
