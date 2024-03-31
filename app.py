@@ -34,8 +34,8 @@ def handle_input(button: DualShock4Button, state: ButtonState):
         hold_time = ms_elapsed - last_pressed[button]
 
         start_time = last_pressed[button]
-        if os.getenv('SNAP') == 'true':
-            snap_to = int(os.getenv('BPM')) // int(os.getenv('DIVISION'))
+        if os.getenv('SNAPPING') == 'true':
+            snap_to = (60000 // int(os.getenv('BPM'))) // int(os.getenv('DIVISION'))
             start_time = round(start_time // snap_to) * snap_to
 
         note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, start_time, hold_time)
