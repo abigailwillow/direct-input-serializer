@@ -40,7 +40,7 @@ def handle_input(button: DualShock4Button, state: ButtonState):
 
         note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, start_time, hold_time)
         notes.append(note)
-        print(f'({pygame.time.get_ticks()} ms) {note.button.upper()} RELEASED (TYPE: {note.type.upper()}, START: {start_time} MS, LENGTH: {hold_time} MS)')
+        print(f'({pygame.time.get_ticks()} MS) {note.button.upper()} RELEASED (TYPE: {note.type.upper()}, START: {start_time} MS, LENGTH: {hold_time} MS)')
 
 def serialize_inputs():
     if not notes:
@@ -97,7 +97,7 @@ while running:
                 continue
 
     music_text = font.render(f'{music_min:02}:{music_sec:02}', True, COLOR_WHITE)
-    ms_text = font.render(f'{pygame.time.get_ticks()} ms', True, COLOR_WHITE)
+    ms_text = font.render(f'{pygame.time.get_ticks()}', True, COLOR_WHITE)
 
     window.blit(music_text, (16, 16))
     window.blit(ms_text, (16, 48))
