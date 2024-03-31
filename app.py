@@ -1,3 +1,4 @@
+import os
 import json
 import atexit
 import pygame
@@ -7,25 +8,29 @@ from dualshock4_button import DualShock4Button
 from button_state import ButtonState
 from input import Input
 
-WHITE = (255, 255, 255)
+COLOR_WHITE = (255, 255, 255)
+START_TIME = time.time_ns()
 
-start_time = time.time_ns()
 inputs = []
+ms_elapsed = 0
 
 def handle_input(button, state):
-    current_time = (time.time_ns() - start_time) // 1_000_000
-    input = Input(button, current_time, state)
+    input = Input(button, ms_elapsed, state)
     inputs.append(input)
     print(f'({input.time} ms) {input.button} {input.state}')
 
-def save_inputs():
+def serialize_inputs():
     if not inputs:
         return
+    
+    if not os.path.exists('output'):
+        os.makedirs('output')
+
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     with open(f'output/inputs-{timestamp}.json', 'w') as file:
         file.write(json.dumps([input.__dict__ for input in inputs]))
 
-atexit.register(save_inputs)
+atexit.register(serialize_inputs)
 
 running = True
 
@@ -54,7 +59,7 @@ while running:
     music_s = music_ms // 1000
     music_min, music_sec = divmod(music_s, 60)
     
-    ms_elapsed = (time.time_ns() - start_time) // 1_000_000
+    ms_elapsed = (time.time_ns() - START_TIME) // 1_000_000
 
     pressed_buttons = []
     for i in range(joystick.get_numbuttons()):
@@ -64,14 +69,14 @@ while running:
             except ValueError:
                 continue
 
-    music_text = font.render(f'{music_min:02}:{music_sec:02}', True, WHITE)
-    ms_text = font.render(f'{ms_elapsed} ms', True, WHITE)
+    music_text = font.render(f'{music_min:02}:{music_sec:02}', True, COLOR_WHITE)
+    ms_text = font.render(f'{ms_elapsed} ms', True, COLOR_WHITE)
 
     window.blit(music_text, (16, 16))
     window.blit(ms_text, (16, 48))
 
     for i, button in enumerate(pressed_buttons):
-        button_text = font.render(button, True, WHITE)
+        button_text = font.render(button, True, COLOR_WHITE)
         window.blit(button_text, (16, 96 + i * 32))
 
     pygame.display.flip()
