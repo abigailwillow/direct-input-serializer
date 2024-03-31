@@ -116,10 +116,7 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                if pygame.mixer.music.get_busy():
-                    pygame.mixer.music.pause()
-                else:
-                    pygame.mixer.music.unpause()
+                pygame.mixer.music.pause() if pygame.mixer.music.get_busy() else pygame.mixer.music.unpause()
 
 
     for i in range(joystick.get_numbuttons()):
