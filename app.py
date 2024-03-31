@@ -7,14 +7,11 @@ import tkinter as tk
 from typing import List, Dict
 from tkinter import filedialog
 from datetime import datetime
-from dotenv import load_dotenv
 
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
 from note import Note
 from note_type import NoteType
-
-load_dotenv()
 
 VOLUME = 0.5
 COLOR_WHITE = (255, 255, 255)
@@ -34,9 +31,6 @@ def handle_input(button: DualShock4Button, state: ButtonState):
         hold_time = pygame.mixer.music.get_pos() - last_pressed[button]
 
         start_time = last_pressed[button]
-        if os.getenv('SNAPPING') == 'true':
-            snap_to = (60000 // int(os.getenv('BPM'))) // int(os.getenv('DIVISION'))
-            start_time = round(start_time // snap_to) * snap_to
 
         note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, start_time, hold_time)
         notes.append(note)
