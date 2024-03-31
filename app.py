@@ -3,6 +3,8 @@ import json
 import atexit
 import pygame
 import time
+import tkinter as tk
+from tkinter import filedialog
 from datetime import datetime
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
@@ -34,12 +36,16 @@ atexit.register(serialize_inputs)
 
 running = True
 
+root = tk.Tk()
+root.withdraw()
+file = filedialog.askopenfilename(filetypes=[('Audio Files', '*.mp3 *.wav *.ogg')])
+
 pygame.init()
 
 pygame.joystick.init()
 
 pygame.mixer.init()
-pygame.mixer.music.load('karaoke.mp3')
+pygame.mixer.music.load(file)
 pygame.mixer.music.play()
 
 window = pygame.display.set_mode((256, 256))

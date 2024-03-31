@@ -4,4 +4,4 @@ __pycache__
 
 # Project Files
 output/
-karaoke.mp3
+*.mp3
