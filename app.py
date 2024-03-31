@@ -18,7 +18,7 @@ def handle_input(button, state):
 
 def save_inputs():
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    with open(f'outputs/inputs-{timestamp}.json', 'w') as file:
+    with open(f'output/inputs-{timestamp}.json', 'w') as file:
         file.write(json.dumps([input.__dict__ for input in inputs]))
 
 atexit.register(save_inputs)
