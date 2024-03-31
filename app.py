@@ -27,11 +27,11 @@ last_pressed: Dict[DualShock4Button, int] = {button: 0 for button in DualShock4B
 
 def handle_input(button: DualShock4Button, state: ButtonState):
     if state == ButtonState.PRESSED:
-        last_pressed[button] = pygame.time.get_ticks()
-        print(f'({pygame.time.get_ticks()} ms) {button.name.upper()} PRESSED')
+        last_pressed[button] = pygame.mixer.music.get_pos()
+        print(f'({pygame.mixer.music.get_pos()} MS) {button.name.upper()} PRESSED')
 
     if state == ButtonState.RELEASED:
-        hold_time = pygame.time.get_ticks() - last_pressed[button]
+        hold_time = pygame.mixer.music.get_pos() - last_pressed[button]
 
         start_time = last_pressed[button]
         if os.getenv('SNAPPING') == 'true':
@@ -40,7 +40,7 @@ def handle_input(button: DualShock4Button, state: ButtonState):
 
         note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, start_time, hold_time)
         notes.append(note)
-        print(f'({pygame.time.get_ticks()} MS) {note.button.upper()} RELEASED (TYPE: {note.type.upper()}, START: {start_time} MS, LENGTH: {hold_time} MS)')
+        print(f'({pygame.mixer.music.get_pos()} MS) {note.button.upper()} RELEASED (TYPE: {note.type.upper()}, START: {start_time} MS, LENGTH: {hold_time} MS)')
 
 def serialize_inputs():
     if not notes:
@@ -84,8 +84,7 @@ previous_values = {i: 0 for i in range(joystick.get_numbuttons())}
 while running:
     window.fill((0, 0, 0))
 
-    music_ms = pygame.mixer.music.get_pos()
-    music_s = music_ms // 1000
+    music_s = pygame.mixer.music.get_pos() // 1000
     music_min, music_sec = divmod(music_s, 60)
     
     pressed_buttons = []
@@ -97,7 +96,7 @@ while running:
                 continue
 
     music_text = font.render(f'{music_min:02}:{music_sec:02}', True, COLOR_WHITE)
-    ms_text = font.render(f'{pygame.time.get_ticks()}', True, COLOR_WHITE)
+    ms_text = font.render(f'{pygame.mixer.music.get_pos()}', True, COLOR_WHITE)
 
     window.blit(music_text, (16, 16))
     window.blit(ms_text, (16, 48))
