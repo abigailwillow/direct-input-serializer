@@ -3,10 +3,12 @@ import json
 import atexit
 import pygame
 import time
-import tkinter as tk
+import subprocess
+import tkinter
 from typing import List, Dict
 from tkinter import filedialog
 from datetime import datetime
+from dotenv import load_dotenv
 
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
@@ -47,11 +49,17 @@ def serialize_inputs():
     with open(file_name, 'w') as file:
         file.write(json.dumps([input.__dict__ for input in notes], indent=4))
 
+    if os.getenv('SNAPPING') == 'true':
+        subprocess.run(['python', 'snap.py', file_name])
+        print(f'Automatically snapped {file_name}')
+
+load_dotenv()
+
 atexit.register(serialize_inputs)
 
 running = True
 
-root = tk.Tk()
+root = tkinter.Tk()
 root.withdraw()
 audio_file = filedialog.askopenfilename(filetypes=[('Audio Files', '*.mp3 *.wav *.ogg')])
 
@@ -116,3 +124,4 @@ while running:
             previous_values[i] = value
 
 pygame.quit()
+
