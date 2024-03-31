@@ -7,10 +7,14 @@ import tkinter as tk
 from typing import List, Dict
 from tkinter import filedialog
 from datetime import datetime
+from dotenv import load_dotenv
+
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
 from note import Note
 from note_type import NoteType
+
+load_dotenv()
 
 COLOR_WHITE = (255, 255, 255)
 START_TIME = time.time_ns()
@@ -28,9 +32,15 @@ def handle_input(button: DualShock4Button, state: ButtonState):
 
     if state == ButtonState.RELEASED:
         hold_time = ms_elapsed - last_pressed[button]
-        note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, last_pressed[button], hold_time)
+
+        start_time = last_pressed[button]
+        if os.getenv('SNAP') == 'true':
+            snap_to = int(os.getenv('BPM')) // int(os.getenv('DIVISION'))
+            start_time = round(start_time // snap_to) * snap_to
+
+        note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, start_time, hold_time)
         notes.append(note)
-        print(f'({ms_elapsed} ms) {note.button.upper()} RELEASED AFTER {int(note.length * 1000)} ms ({note.type.upper()})')
+        print(f'({ms_elapsed} ms) {note.button.upper()} RELEASED (TYPE: {note.type.upper()}, START: {start_time} MS, LENGTH: {hold_time} MS)')
 
 def serialize_inputs():
     if not notes:
