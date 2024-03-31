@@ -1,7 +1,7 @@
-# Python Files
+.env
+
 __pycache__
 .venv
 
-# Project Files
 output/
 *.mp3
