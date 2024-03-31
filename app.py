@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
 from note import Note
+from line import Line
 from note_type import NoteType
 
 VOLUME = 0.5
@@ -20,7 +21,7 @@ COLOR_WHITE = (255, 255, 255)
 START_TIME = time.time_ns()
 HOLD_TRESHOLD = 500
 
-lines = []
+lines: List[Line] = []
 notes: List[Note] = []
 last_pressed: Dict[DualShock4Button, int] = {button: 0 for button in DualShock4Button}
 
