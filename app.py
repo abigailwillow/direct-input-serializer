@@ -28,8 +28,8 @@ def serialize_inputs():
     if not os.path.exists('output'):
         os.makedirs('output')
 
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    with open(f'output/inputs-{timestamp}.json', 'w') as file:
+    file_name = f'output/{os.path.splitext(os.path.basename(audio_file))[0]}-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.json'
+    with open(file_name, 'w') as file:
         file.write(json.dumps([input.__dict__ for input in inputs]))
 
 atexit.register(serialize_inputs)
@@ -38,14 +38,14 @@ running = True
 
 root = tk.Tk()
 root.withdraw()
-file = filedialog.askopenfilename(filetypes=[('Audio Files', '*.mp3 *.wav *.ogg')])
+audio_file = filedialog.askopenfilename(filetypes=[('Audio Files', '*.mp3 *.wav *.ogg')])
 
 pygame.init()
 
 pygame.joystick.init()
 
 pygame.mixer.init()
-pygame.mixer.music.load(file)
+pygame.mixer.music.load(audio_file)
 pygame.mixer.music.play()
 
 window = pygame.display.set_mode((256, 256))
