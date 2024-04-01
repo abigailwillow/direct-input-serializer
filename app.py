@@ -9,10 +9,10 @@ from tkinter import filedialog
 from datetime import datetime
 from dotenv import load_dotenv
 
-from dualshock4_button import DualShock4Button
-from button_state import ButtonState
-from note import Note
-from note_type import NoteType
+from models import DualShock4Button
+from models import ButtonState
+from models import Note
+from models import NoteType
 
 load_dotenv()
 

@@ -1,7 +1,7 @@
 import os
 import json
 import argparse
-from line import Line
+from models import Line
 
 SPAWN_PADDING = 0.5
 START_PADDING = 0.25
