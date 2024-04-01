@@ -3,12 +3,10 @@ import json
 import atexit
 import pygame
 import time
-import subprocess
 import tkinter
 from typing import List, Dict
 from tkinter import filedialog
 from datetime import datetime
-from dotenv import load_dotenv
 
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
@@ -47,12 +45,6 @@ def serialize_inputs():
     file_name = f'output/{os.path.splitext(os.path.basename(audio_file))[0]}-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.json'
     with open(file_name, 'w') as file:
         file.write(json.dumps([input.__dict__ for input in notes], indent=4))
-
-    if os.getenv('SNAPPING') == 'true':
-        subprocess.run(['python', 'snap.py', file_name])
-        print(f'Automatically snapped {file_name}')
-
-load_dotenv()
 
 atexit.register(serialize_inputs)
 
