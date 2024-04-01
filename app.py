@@ -2,7 +2,6 @@ import os
 import json
 import atexit
 import pygame
-import time
 import tkinter
 from typing import List, Dict
 from tkinter import filedialog
