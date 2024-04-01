@@ -10,6 +10,7 @@ class Line:
         self.end_time = end_time
         self.despawn_time = despawn_time
         self.lyric_width = 1
+        self.lyric_texture = ''
 
 PADDING = 0.1
 
