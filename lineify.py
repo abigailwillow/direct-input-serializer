@@ -24,7 +24,7 @@ for note in notes:
     lines.append(Line(current_row, spawn_time, start_time, end_time, despawn_time))
 
 file, extension = os.path.splitext(args.file)
-args.file = f'{file}-lines{extension}'
+args.file = f'{file}-lineified{extension}'
 
 with open(args.file, 'w') as file:
     file.write(json.dumps([line.__dict__ for line in lines], indent=4))
