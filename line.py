@@ -12,7 +12,7 @@ class Line:
         self.lyric_width = 1
         self.lyric_texture = ''
 
-PADDING = 0.25
+PADDING = 0.5
 
 parser = argparse.ArgumentParser(description='Process JSON file and convert to line format')
 parser.add_argument('file', type=str, help='JSON file to process')
