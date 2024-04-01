@@ -7,16 +7,14 @@ import tkinter
 from typing import List, Dict
 from tkinter import filedialog
 from datetime import datetime
+from dotenv import load_dotenv
 
 from dualshock4_button import DualShock4Button
 from button_state import ButtonState
 from note import Note
 from note_type import NoteType
 
-VOLUME = 0.5
-COLOR_WHITE = (255, 255, 255)
-START_TIME = time.time_ns()
-HOLD_TRESHOLD = 500
+load_dotenv()
 
 notes: List[Note] = []
 last_pressed: Dict[DualShock4Button, int] = {button: 0 for button in DualShock4Button}
@@ -31,7 +29,7 @@ def handle_input(button: DualShock4Button, state: ButtonState):
 
         start_time = last_pressed[button]
 
-        note = Note(NoteType.NORMAL if hold_time < HOLD_TRESHOLD else NoteType.HOLD, button, start_time, hold_time)
+        note = Note(NoteType.NORMAL if hold_time < int(os.getenv('HOLD_TRESHOLD', 500)) else NoteType.HOLD, button, start_time, hold_time)
         notes.append(note)
         print(f'({pygame.mixer.music.get_pos()} MS) {note.button.upper()} RELEASED (TYPE: {note.type.upper()}, START: {start_time} MS, LENGTH: {hold_time} MS)')
 
@@ -60,7 +58,7 @@ pygame.joystick.init()
 
 pygame.mixer.init()
 pygame.mixer.music.load(audio_file)
-pygame.mixer.music.set_volume(VOLUME)
+pygame.mixer.music.set_volume(float(os.getenv('VOLUME', 1)))
 pygame.mixer.music.play()
 print(f'Playing {os.path.basename(audio_file)}')
 
@@ -88,14 +86,14 @@ while running:
             except ValueError:
                 continue
 
-    music_text = font.render(f'{music_min:02}:{music_sec:02}', True, COLOR_WHITE)
-    ms_text = font.render(f'{pygame.mixer.music.get_pos()}', True, COLOR_WHITE)
+    music_text = font.render(f'{music_min:02}:{music_sec:02}', True, (255, 255, 255))
+    ms_text = font.render(f'{pygame.mixer.music.get_pos()}', True, (255, 255, 255))
 
     window.blit(music_text, (16, 16))
     window.blit(ms_text, (16, 48))
 
     for i, button in enumerate(pressed_buttons):
-        button_text = font.render(button, True, COLOR_WHITE)
+        button_text = font.render(button, True, (255, 255, 255))
         window.blit(button_text, (16, 96 + i * 32))
 
     pygame.display.flip()
