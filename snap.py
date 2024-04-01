@@ -2,7 +2,7 @@ import os
 import json
 import argparse
 
-BPM = 133
+BPM = 120
 DIVISION = 16
 
 parser = argparse.ArgumentParser(description='Process JSON file and snap values to nearest division')
