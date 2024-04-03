@@ -1,6 +1,6 @@
-from models import Settings
-from models import Line
-from models import Note
+from .settings import Settings
+from .line import Line
+from .note import Note
 from typing import List
 
 class Project:
