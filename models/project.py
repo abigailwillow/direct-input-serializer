@@ -1,5 +1,7 @@
 from typing import List
-from . import Settings, Line, Note
+from .settings import Settings
+from .line import Line
+from .note import Note
 
 class Project:
     def __init__(self, *, settings: Settings, lines: List[Line], notes: List[Note]):

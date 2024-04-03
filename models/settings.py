@@ -1,5 +1,5 @@
 from pathlib import Path
-from . import AudioTracks
+from .audio_tracks import AudioTracks
 
 class Settings:
     def __init__(self, *, title: str, disc_sticker: Path, splash: Path, audio_tracks: AudioTracks, notes_for_cutscene: int, cutscene_start: int, cutscene_end: int, cutscene_pre_rendered: Path, great_timing: float = 0.1, good_timing: float = 0.2):
